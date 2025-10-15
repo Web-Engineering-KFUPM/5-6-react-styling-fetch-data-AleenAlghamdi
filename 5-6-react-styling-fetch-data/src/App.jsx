@@ -331,16 +331,44 @@ function App() {
     const [showModal, setShowModal] = useState(false)
     const [selectedUser, setSelectedUser] = useState(null)
 
-  useEffect(() => {
-    {/*API fetch logic*/}
+    useEffect(() => {
+        const fetchUsers = async () => {
+            setLoading(true);
+            setError(null);
+            try {
+                const res = await fetch("https://jsonplaceholder.typicode.com/users");
+                if (!res.ok) throw new Error(`HTTP ${res.status}`);
+                const data = await res.json();
+                setUsers(data);
+                setFilteredUsers(data); // initial view = all
+            } catch (err) {
+                setError(err.message || "Failed to fetch users");
+            } finally {
+                setLoading(false);
+            }
+        };
+        fetchUsers();
+    }, []);
 
-  }, [])
+    useEffect(() => {
+        if (!searchTerm.trim()) {
+            setFilteredUsers(users);
+            return;
+        }
+        const q = searchTerm.toLowerCase();
+        const filtered = users.filter((u) => u.name.toLowerCase().includes(q));
+        setFilteredUsers(filtered);
+    }, [searchTerm, users]);
 
-  const handleUserClick = (user) => {
-  }
+    const handleUserClick = (user) => {
+        setSelectedUser(user)
+        setShowModal(true)
+    }
 
-  const handleCloseModal = () => {
-  }
+    const handleCloseModal = () => {
+        setShowModal(false)
+        setSelectedUser(null)
+    }
 
   return (
     <div className="app">
@@ -356,12 +384,24 @@ function App() {
         <Container className="py-3">
             <SearchBar searchTerm={searchTerm} onSearchChange={setSearchTerm} />
 
-            {/* {loading && <Spinner ... />} */}
         {/* {error && <Alert ...>{error}</Alert>} */}
-        {/* <UserList users={filteredUsers} onUserClick={handleUserClick} /> */}
+            {loading && (
+                <div className="text-center">
+                    <Spinner animation="border" variant="primary" />
+                </div>
+            )}
+            {error && <Alert variant="danger">{error}</Alert>}
 
-        <UserModal />
-      </Container>
+            {!loading && !error && (
+                <UserList users={filteredUsers} onUserClick={handleUserClick} />
+            )}
+
+            <UserModal
+                show={showModal}
+                user={selectedUser}
+                onHide={handleCloseModal}
+            />
+        </Container>
 
         {/* TODO 1.7: Add Footer */}
         <footer className="bg-light py-4 mt-5">
