@@ -324,6 +324,12 @@ import UserModal from './components/UserModal'
 
 function App() {
   const [users, setUsers] = useState([])
+    const [filteredUsers, setFilteredUsers] = useState([])
+    const [loading, setLoading] = useState(true)
+    const [error, setError] = useState(null)
+    const [searchTerm, setSearchTerm] = useState('')
+    const [showModal, setShowModal] = useState(false)
+    const [selectedUser, setSelectedUser] = useState(null)
 
   useEffect(() => {
     {/*API fetch logic*/}
@@ -338,24 +344,27 @@ function App() {
 
   return (
     <div className="app">
-      <header className="">
-        <Container>
-          <h1 className="">User Management Dashboard</h1>
-          <p className="">Manage and view user information</p>
-        </Container>
+        {/* TODO 1.2: Style the Header Section */}
+        <header className="bg-primary text-white py-3 mb-4 shadow">
+            <Container>
+                <h1 className="h2 mb-0">User Management Dashboard</h1>
+                <p className="mb-0 opacity-75">Manage and view user information</p>
+            </Container>
       </header>
 
-      <Container className="">
-        <SearchBar />
+        {/* TODO 1.1: Add Layout Containers */}
+        <Container className="py-3">
+            <SearchBar searchTerm={searchTerm} onSearchChange={setSearchTerm} />
 
-        {/* {loading && <Spinner ... />} */}
+            {/* {loading && <Spinner ... />} */}
         {/* {error && <Alert ...>{error}</Alert>} */}
         {/* <UserList users={filteredUsers} onUserClick={handleUserClick} /> */}
 
         <UserModal />
       </Container>
 
-      <footer className="">
+        {/* TODO 1.7: Add Footer */}
+        <footer className="bg-light py-4 mt-5">
         <Container>
           <p className="text-center text-muted mb-0">
             &copy; 2024 User Management Dashboard

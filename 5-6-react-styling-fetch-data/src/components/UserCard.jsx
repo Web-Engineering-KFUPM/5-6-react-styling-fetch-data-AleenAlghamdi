@@ -4,8 +4,8 @@ import { Card, Button } from 'react-bootstrap'
 function UserCard({ user, onUserClick }) {
   return (
     <Card className="user-card">
-      <Card.Body>
-        <div>
+      <Card.Body className="text-center">
+        <div className="mb-3">
           <div className="user-avatar">
             {user.name.charAt(0)}
           </div>
@@ -18,7 +18,12 @@ function UserCard({ user, onUserClick }) {
           <strong>Phone:</strong> {user.phone}
         </Card.Text>
       {/* Buttotn*/}
-      
+          <Button
+              variant="primary"
+              onClick={() => onUserClick(user)}
+          >
+              View Details
+          </Button>
       </Card.Body>
     </Card>
   )
